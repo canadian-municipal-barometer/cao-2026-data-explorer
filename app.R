@@ -623,7 +623,7 @@ main_ui <- div(
         width = 320,
         p(
           class = "text-muted small",
-          "The heatmap's strongest cells, ranked live by absolute correlation. Each pair uses every response that answered both items (n), so pairs from questions shown to a subset (e.g. strong-mayor items) have a smaller n."
+          "The heatmap's strongest cells, ranked by absolute correlation. Each pair uses every response that answered both items (n), so pairs from questions shown to a subset (e.g. strong-mayor items) have a smaller n."
         ),
         numericInput(
           "tc_n",
@@ -1012,17 +1012,27 @@ server <- function(input, output, session) {
     req(v)
     if (is_num(v)) {
       x <- dat[[v]]
-      sprintf(
-        "%s · n = %d · missing = %d · mean = %.2f · median = %.2f · sd = %.2f · range = %g–%g",
-        var_type(v),
-        sum(!is.na(x)),
-        sum(is.na(x)),
-        mean(x, na.rm = TRUE),
-        median(x, na.rm = TRUE),
-        sd(x, na.rm = TRUE),
-        min(x, na.rm = TRUE),
-        max(x, na.rm = TRUE)
-      )
+      if (var_type(v) == "continuous") {
+        sprintf(
+          "%s · n = %d · missing = %d · mean = %.2f · median = %.2f · sd = %.2f · range = %g–%g",
+          var_type(v),
+          sum(!is.na(x)),
+          sum(is.na(x)),
+          mean(x, na.rm = TRUE),
+          median(x, na.rm = TRUE),
+          sd(x, na.rm = TRUE),
+          min(x, na.rm = TRUE),
+          max(x, na.rm = TRUE)
+        )
+      } else {
+        sprintf(
+          "%s · n = %d · missing = %d · median = %.2f",
+          var_type(v),
+          sum(!is.na(x)),
+          sum(is.na(x)),
+          median(x, na.rm = TRUE)
+        )
+      }
     } else {
       x <- dat[[v]]
       sprintf(
