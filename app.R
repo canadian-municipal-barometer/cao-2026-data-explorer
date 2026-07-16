@@ -532,7 +532,7 @@ main_ui <- div(
       title = "Sections menu",
       `aria-label` = "Open sections menu"
     ),
-    h2("CAO 2026 — Exploratory Data Analysis")
+    h2("CAO 2026 — Exploratory Data Analyzer")
   ),
 
   # Hamburger -> left side-sheet modal: a table of contents linking to each card.
