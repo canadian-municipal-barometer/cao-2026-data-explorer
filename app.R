@@ -589,22 +589,27 @@ main_ui <- div(
 
   # Close the TOC modal and smooth-scroll to the chosen card. (A plain
   # data-bs-dismiss on an <a href="#..."> misfires: Bootstrap reads the href
-  # as the dismiss target, so it never hides #tocMenu.)
+  # as the dismiss target, so it never hides #tocMenu.) Resolve the target
+  # from a.hash, never the href attribute: hosted Shiny (Posit Connect /
+  # Shiny Server) injects a <base href="_w_.../"> and a body-level click
+  # handler (fixupInternalLinks) that rewrites the href attribute to an
+  # absolute URL before this document-level listener runs, so the attribute
+  # is not a valid selector there. The 250ms delay lets the modal's hide
+  # transition release body { overflow: hidden } before scrolling.
   tags$script(HTML(
     "document.addEventListener('click', function (e) {
          var a = e.target.closest('.toc-nav a');
          if (!a) return;
          e.preventDefault();
+         var target = a.hash && document.getElementById(a.hash.slice(1));
+         if (!target) return;
          var modalEl = document.getElementById('tocMenu');
          if (window.bootstrap && modalEl) {
            bootstrap.Modal.getOrCreateInstance(modalEl).hide();
          }
-         var target = document.querySelector(a.getAttribute('href'));
-         if (target) {
-           setTimeout(function () {
-             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-           }, 250);
-         }
+         setTimeout(function () {
+           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+         }, 250);
        });"
   )),
 
