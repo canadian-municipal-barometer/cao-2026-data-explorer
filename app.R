@@ -184,6 +184,15 @@ ordinal_vars <- setdiff(
 # Items that live on a numeric axis (rank-correlatable): continuous + ordinal.
 numeric_like <- c(continuous_vars, ordinal_vars)
 
+# -99 codes "Don't know / No Opinion" across the survey. Anywhere a variable
+# is used as a number (correlations, fit lines, medians, axes) that sentinel
+# would masquerade as a real value, so blank it to NA on the numeric-like
+# set. Categorical vars keep it: there -99 decodes to a legitimate answer
+# category via value_labels (housing "Prefer not to say", indig_champions
+# "None of the above").
+raw <- raw |>
+  mutate(across(all_of(numeric_like), ~ replace(.x, .x == -99, NA)))
+
 # Coerce the categorical set to factors (many are semicolon-coded multi-selects).
 dat <- raw
 for (v in categorical_vars) {
@@ -346,6 +355,9 @@ theme_eda <- theme_minimal(base_size = 12) +
 # Scatter cell for the continuous/interval grid: jittered points, lm + loess,
 # Pearson r label.
 scatter_cell <- function(df, xvar, yvar, jitter = TRUE, colvar = NULL) {
+  if (!is.null(colvar)) {
+    df[[colvar]] <- labeled_factor(df[[colvar]], colvar)
+  }
   s <- corr_stat(df[[xvar]], df[[yvar]], "pearson")
   rlab <- if (is.na(s$coef)) {
     "r = NA"
