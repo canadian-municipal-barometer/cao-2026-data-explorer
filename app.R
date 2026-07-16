@@ -63,9 +63,12 @@ gs4_deauth()
 schema <- readRDS("schema.rds")
 
 raw <- read_sheet(data_url) |>
-  # type_convert only applies to character type columns, so force character
+  # type_convert only applies to character type columns, so force character.
+  # read_sheet returns mixed columns as list-columns whose empty cells are R
+  # NULLs, and as.character() renders those as the literal string "NULL" --
+  # include it in the na strings so it parses back to NA, not an answer.
   mutate(across(everything(), as.character)) |>
-  type_convert(col_types = schema)
+  type_convert(col_types = schema, na = c("", "NA", "NULL"))
 
 labels_tbl <- if (file.exists(labels_path)) {
   readr::read_csv(labels_path, show_col_types = FALSE)
@@ -156,6 +159,21 @@ categorical_vars <- c(
   "job_longest"
 )
 categorical_vars <- intersect(categorical_vars, names(raw))
+
+# Semicolon-combined "select all that apply" sets built by clean.R's
+# combine_breakout_set(): one column holding every selected option code per
+# respondent ("2;12"). A subset of categorical_vars. Most views treat each
+# unique combination as a single category; the single-variable view instead
+# presents them per option (share of respondents selecting each).
+multiselect_vars <- c(
+  "race",
+  "educ_specific",
+  "job_environment",
+  "job_background",
+  "indig_champions",
+  "indig_initiatives"
+)
+multiselect_vars <- intersect(multiselect_vars, names(raw))
 
 numeric_all <- names(raw)[vapply(raw, is.numeric, logical(1))]
 ordinal_vars <- setdiff(
@@ -659,11 +677,11 @@ main_ui <- div(
         width = 320,
         p(
           class = "text-muted small",
-          "View scatter, box/violin, cross-tab heatmap, or stacked bars for any two variables."
+          "View scatter, box/violin, cross-tab heatmap, or stacked bars for any two variables where levels of analysis are compatible with the plot type."
         ),
         p(
           class = "text-muted small",
-          "Pick an X variable, a Y variable, and a plot type. “Auto” chooses the plot from the two variables' measurement levels; you can override it. The association statistic below the plot always follows the measurement levels (Pearson r / Spearman ρ / η² / Cramér's V)."
+          "Pick an X variable, a Y variable, and a plot type. “Auto” chooses the plot from the two variables' levels of analysis; you can override it. The association statistic below the plot always follows the measurement levels (Pearson r / Spearman ρ / η² / Cramér's V)."
         ),
         selectInput(
           "bv_x",
@@ -717,7 +735,10 @@ main_ui <- div(
         )
       ),
       textOutput("uni_summary"),
-      plotOutput("uni_plot", height = "420px")
+      uiOutput("uni_note"),
+      # "auto" so the renderPlot height function (one bar per option needs
+      # more room on the multi-selects) controls the rendered size.
+      plotOutput("uni_plot", height = "auto")
     )
   ),
 
@@ -985,7 +1006,23 @@ server <- function(input, output, session) {
   })
 
   # --- 3. Single-variable distribution --------------------------------------
-  output$uni_plot <- renderPlot({
+  # Multi-selects draw one bar per option with wrapped labels, so give them
+  # ~32px per option instead of the fixed height everything else uses.
+  uni_plot_height <- function() {
+    v <- input$uni_var
+    if (is.null(v) || !v %in% multiselect_vars) {
+      return(420)
+    }
+    x <- dat[[v]][!is.na(dat[[v]])]
+    n_opt <- dplyr::n_distinct(unlist(strsplit(
+      as.character(x),
+      ";",
+      fixed = TRUE
+    )))
+    max(420, 32 * n_opt + 60)
+  }
+
+  output$uni_plot <- renderPlot(height = uni_plot_height, {
     v <- input$uni_var
     req(v)
     if (var_type(v) == "continuous") {
@@ -997,10 +1034,42 @@ server <- function(input, output, session) {
         ) +
         labs(x = paste0(v, "  —  ", label_of(v)), y = "Count") +
         theme_eda
+    } else if (v %in% multiselect_vars) {
+      # Per-option view: split each respondent's "2;12" into its options and
+      # show the share of respondents selecting each one. Respondents with
+      # several selections appear in several bars.
+      x <- as.character(dat[[v]][!is.na(dat[[v]])])
+      n_resp <- length(x)
+      dd <- tibble(code = unlist(strsplit(x, ";", fixed = TRUE))) |>
+        count(code) |>
+        mutate(
+          share = n / n_resp,
+          .lab = fct_reorder(decode(v, code), n)
+        )
+      ggplot(dd, aes(share, .lab)) +
+        geom_col(fill = "#2c3e50") +
+        geom_text(aes(label = n), hjust = -0.4, size = 3.5) +
+        scale_x_continuous(
+          labels = percent,
+          expand = expansion(mult = c(0, 0.1))
+        ) +
+        scale_y_discrete(labels = label_wrap(55)) +
+        labs(
+          x = paste0("Share of respondents selecting option  —  ", v),
+          y = NULL
+        ) +
+        theme_eda +
+        theme(axis.text.y = element_text(size = 10, lineheight = 0.9))
     } else {
       dd <- tibble(.lab = fct_infreq(labeled_factor(dat[[v]], v)))
       ggplot(dd, aes(.lab)) +
         geom_bar(fill = "#2c3e50") +
+        geom_text(
+          stat = "count",
+          aes(label = after_stat(count)),
+          vjust = -0.5,
+          size = 3.5
+        ) +
         labs(x = paste0(v, "  —  ", label_of(v)), y = "Count") +
         theme_eda +
         theme(axis.text.x = element_text(angle = 30, hjust = 1))
@@ -1033,6 +1102,19 @@ server <- function(input, output, session) {
           median(x, na.rm = TRUE)
         )
       }
+    } else if (v %in% multiselect_vars) {
+      sel <- strsplit(
+        as.character(dat[[v]][!is.na(dat[[v]])]),
+        ";",
+        fixed = TRUE
+      )
+      sprintf(
+        "categorical (multi-select) · n = %d · missing = %d · %d options selected · mean selections per respondent = %.1f",
+        length(sel),
+        sum(is.na(dat[[v]])),
+        dplyr::n_distinct(unlist(sel)),
+        mean(lengths(sel))
+      )
     } else {
       x <- dat[[v]]
       sprintf(
@@ -1044,12 +1126,40 @@ server <- function(input, output, session) {
     }
   })
 
+  # Shown only for multi-selects, where the bar chart switches from one bar
+  # per response category to one bar per option.
+  output$uni_note <- renderUI({
+    v <- input$uni_var
+    req(v)
+    if (!v %in% multiselect_vars) {
+      return(NULL)
+    }
+    p(
+      class = "text-muted small",
+      "This is a “select all that apply” question, so unlike the",
+      "other bar charts, each bar is the share of respondents who selected",
+      "that option. Respondents with several selections appear in several",
+      "bars, so the percentages sum to more than 100%. The other sections",
+      "treat each unique combination of selections as a single category."
+    )
+  })
+
   # --- 4. Dictionary --------------------------------------------------------
   output$dict <- DT::renderDT(
     {
       tibble(
         variable = all_pickable,
-        type = vapply(all_pickable, var_type, character(1)),
+        type = vapply(
+          all_pickable,
+          function(v) {
+            if (v %in% multiselect_vars) {
+              "categorical (multi-select)"
+            } else {
+              var_type(v)
+            }
+          },
+          character(1)
+        ),
         question = vapply(all_pickable, label_of, character(1)),
         `value labels` = vapply(all_pickable, value_label_string, character(1))
       )

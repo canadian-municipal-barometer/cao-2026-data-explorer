@@ -430,3 +430,23 @@ psm,2,Somewhat Disagree
 psm,3,Somewhat Agree
 psm,4,Strongly Agree
 psm,-99,Don’t Know / No Opinion
+educ_valuable,1,B.Sc. in natural sciences
+educ_valuable,2,"B.A. in arts, humanities, or social sciences"
+educ_valuable,3,"M.A. in arts, humanities or social sciences"
+educ_valuable,4,M.Sc. in natural sciences
+educ_valuable,5,Diploma or degree in Public administration
+educ_valuable,6,Diploma or degree in Business administration
+educ_valuable,7,Degree in Engineering
+educ_valuable,8,Degree in Planning
+educ_valuable,9,Degree in Accounting or finance
+educ_valuable,10,Degree in Law
+educ_valuable,11,Ph.D. (in any field)
+educ_valuable,12,Other post-secondary degree or diploma
+job_longest,1,Same municipal government as now
+job_longest,2,Other municipal government(s)
+job_longest,3,First Nation government(s)
+job_longest,4,Provincial government
+job_longest,5,Federal government
+job_longest,6,"Other public authority (agency, board, commission, utility, etc.)"
+job_longest,7,Private sector
+job_longest,8,Non-profit sector
