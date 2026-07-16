@@ -49,15 +49,23 @@ suppressMessages({
   library(scales)
   library(patchwork)
   library(DT)
+  library(googlesheets4)
+  library(readr)
 })
 
 # ----------------------------------------------------------------------------
 # LOCATE + LOAD DATA (works whether launched from project root or app dir)
 # ----------------------------------------------------------------------------
-data_path <- "cao-2026-clean.csv"
+data_url <- "https://docs.google.com/spreadsheets/d/1ABKnu0gYexNZwGMyfQC97WDlgZkA2EhIDblKA7YheoQ/edit?gid=410479067#gid=410479067"
 labels_path <- "labels.csv"
 
-raw <- readr::read_csv(data_path, show_col_types = FALSE)
+gs4_deauth()
+schema <- readRDS("schema.rds")
+
+raw <- read_sheet(data_url) |>
+  # type_convert only applies to character type columns, so force character
+  mutate(across(everything(), as.character)) |>
+  type_convert(col_types = schema)
 
 labels_tbl <- if (file.exists(labels_path)) {
   readr::read_csv(labels_path, show_col_types = FALSE)
