@@ -54,18 +54,8 @@ suppressMessages({
 # ----------------------------------------------------------------------------
 # LOCATE + LOAD DATA (works whether launched from project root or app dir)
 # ----------------------------------------------------------------------------
-find_file <- function(rel) {
-  for (p in c(
-    rel,
-    file.path("..", "..", rel),
-    file.path("analysis", "eda-shiny", basename(rel))
-  )) {
-    if (file.exists(p)) return(p)
-  }
-  rel
-}
-data_path <- find_file("data/clean/cao-2026-clean.csv")
-labels_path <- find_file("analysis/eda-shiny/labels.csv")
+data_path <- "cao-2026-clean.csv"
+labels_path <- "labels.csv"
 
 raw <- readr::read_csv(data_path, show_col_types = FALSE)
 
@@ -195,7 +185,7 @@ is_num <- function(v) v %in% numeric_like
 # the Qualtrics survey definition. Used to show answer text instead of numeric
 # codes on discrete axes and in the dictionary.
 # ----------------------------------------------------------------------------
-vl_path <- find_file("analysis/eda-shiny/value_labels.csv")
+vl_path <- "value_labels.csv"
 value_labels_tbl <- if (file.exists(vl_path)) {
   readr::read_csv(
     vl_path,
