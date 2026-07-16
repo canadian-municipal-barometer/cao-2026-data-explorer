@@ -1,0 +1,90 @@
+variable,label
+source,
+StartDate,Start Date
+EndDate,End Date
+Status,Response Type
+total_duration,
+RecordedDate,Recorded Date
+ResponseId,Response ID
+UserLanguage,User Language
+job_tenure,For how many years have you been in your current position?
+job_environment,In which of the following environments have you worked prior to assuming your current role? (Select all that apply)
+job_longest,In which of these sectors have you spent the longest portion of your career?
+job_background,"Prior to becoming a Chief Administrator, what was your professional background? (Select all that apply)"
+job_background_16_TEXT,"Prior to becoming a Chief Administrator, what was your professional background? (Select all that apply) - Other (Please specify): - Text"
+education,What is the highest level of education that you have completed?
+educ_specific,We would like to know a bit more about your educational background. Which of the following post-secondary credentials have you received? (Select all that apply)
+educ_valuable,Which of these educational experiences would you say has been most valuable to your work in your current position?
+psm,It is important to me that my work contributes to the common good.
+innovation,"In my job, I feel encouraged to come up with new and improved work methods."
+red_tape,Excessive rules and regulations make it harder to do my job effectively.
+policy_implement,"My job is to implement the decisions of Council, not to have positions of my own."
+policy_lead,My job is to use my expertise to guide Council toward making the best possible decisions.
+time_infrastructure,"When it comes to infrastructure repair and investment, municipalities should prioritize ""long-term gain"" even if it means ""short-term pain"" for residents."
+time_challenges,"Municipal councils should focus on solving today’s problems, even if this leaves long-term challenges for later councils to address."
+time_facilities,"Municipalities should prioritize keeping taxes low, even if it means deferring renovation and upgrades to municipal facilities until some time in the future."
+legitimacy_experts,"Municipalities should act on technical evidence from engineers and planners, even if it contradicts the preferences of local residents."
+legitimacy_info,"Municipal politicians should make decisions based on the best available information, even if it means going back on their past campaign promises."
+legitimacy_consult,"Municipal councils should follow the outcome of public consultations, even if experts believe a different approach would work better."
+incivility_prev,"Overall, how often would you say that staff in your municipality experience incivility?"
+incivility_govern,Incivility is having a negative impact on my municipality’s ability to govern and deliver services effectively.
+incivility_staff,Incivility is contributing to burnout or stress leaves among senior staff and making it harder to attract or retain qualified staff.
+incivility_trust,Incivility is undermining trust between Council and administration.
+incivility_costs,"Incivility has led to additional costs (e.g., security, legal advice, investigations)."
+incivility_readiness,How well equipped is your municipality to prevent and address incivility affecting Council–administration relations and the broader organization?
+innovation_barriers_1,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Limited financial resources"
+innovation_barriers_2,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Lack of staff capacity"
+innovation_barriers_3,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Limited technological capabilities"
+innovation_barriers_4,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Lack of support from senior leadership team"
+innovation_barriers_5,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Fear of a failed result"
+innovation_barriers_6,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Lack of council support"
+innovation_barriers_7,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Staff resistance to change"
+innovation_barriers_8,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Provincial/territorial rules and regulations"
+innovation_barriers_9,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - Limited coordination between departments"
+innovation_barriers_10,"We’re interested in your opinion on public sector innovation, which refers to the adoption of an idea for the first time by an organization. Below is a list of barriers to innovation that are commonly identified by local government administrators. How important are each of these barriers to innovation in your municipality? - The proximity of a municipal election"
+indig_important,How important are Indigenous relations/Indigenous affairs to your role as CAO in your municipality?
+indig_focus,What is the primary focus of municipal-Indigenous relations/Indigenous affairs in your municipality?
+indig_established,"In your opinion, which statement best describes your municipality’s activity in Indigenous affairs/ municipal-Indigenous relations?"
+indig_champions,Which of the following actors have been catalysts or champions of positive municipal-Indigenous relations/Indigenous Affairs? (Select all that apply)
+indig_initiatives,Which of the following initiatives has your municipality adopted? (Select all that apply)
+strongmayor_use,Has your mayor used strong mayor powers to make changes to municipal administration?
+strongmayor_effect_1,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - The mayor exerts greater day-to-day influence over administrative operations.
+strongmayor_effect_2,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - Staff morale has improved.
+strongmayor_effect_3,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - Staff are more cautious about offering professional advice.
+strongmayor_effect_4,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - The budget process is working better than before.
+strongmayor_effect_5,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - Staff are less willing to innovate or take initiative.
+strongmayor_effect_6,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - Decisions are made more quickly across the organization.
+strongmayor_effect_7,Please indicate your level of agreement with the following statements. Since the introduction of strong mayor powers: - Accountability between politicians and the public service is clearer.
+strongmayor_open,"Since strong mayor powers were introduced, what are the most significant changes, if any, that you have noticed in how your municipality operates? (max. 300 characters)"
+issue_livingwage,"Municipalities should require that all municipal contractors pay their employees a living wage, even if it means increased costs for the municipality."
+issue_climatechange,"Municipalities should play a strong role in reducing the effects of climate change, even if it means sacrificing revenues and/or expending financial resources"
+issue_socialservices,"Municipalities should prioritize keeping taxes low, even if it means low-income residents have access to fewer social services."
+issue_activetrans,"Municipalities should make their roads accessible to active transportation (walking, cycling) even if it means sacrificing driving lanes and/or parking."
+issue_density,"Municipalities should encourage increased housing density in established neighbourhoods, even if some local residents object."
+issue_subsidies,"Municipalities should provide subsidized programs to low-income residents, even if doing so comes at the expense of businesses and/or wealthy residents."
+issue_landmarks,"Municipalities should keep historic street names, statues, and other heritage landmarks, even if some of the historical individuals being commemorated were prejudiced or racist."
+ideology,"In politics people sometimes talk of left and right. Where would you place yourself on a scale from 0 to 10, where 0 means left and 10 means right?"
+anchor_ideo_pm,"Using the same scale, where would you place ... - Liberal Prime Minister Mark Carney"
+anchor_ideo_opp_leader,"Using the same scale, where would you place ... - Conservative Party Leader, Pierre Poilievre"
+anchor_ideo_premier,"Using the same scale, where would you place ... - Your current provincial premier"
+anchor_ideo_mayor,"Using the same scale, where would you place ... - Your current mayor"
+anchor_ideo_community,"Using the same scale, where would you place ... - Your community as a whole"
+time_use_1,"In a typical week, what percentage of your work time is devoted to the following tasks? - Interacting with members of council"
+time_use_2,"In a typical week, what percentage of your work time is devoted to the following tasks? - Interacting with the head of council"
+time_use_3,"In a typical week, what percentage of your work time is devoted to the following tasks? - Interacting with municipal staff"
+time_use_4,"In a typical week, what percentage of your work time is devoted to the following tasks? - Interacting with other levels of government"
+time_use_5,"In a typical week, what percentage of your work time is devoted to the following tasks? - Interacting with the general public and stakeholders"
+time_use_6,"In a typical week, what percentage of your work time is devoted to the following tasks? - All other tasks"
+gender,How would you describe your gender? - Selected Choice
+gender_9_TEXT,
+yob,In what year were you born?
+housing,What is your current living situation?
+race,"Thinking about your background, do you consider yourself:"
+race_13_TEXT,"Thinking about your background, do you consider yourself: - Other - Text"
+results,Would you like us to share the results of this survey with you by e-mail once they are available?
+interview,"Would you be willing to take part in a follow-up interview with one of our researchers at a future date, so that we can learn more about your perspectives on the subjects addressed in this survey?"
+prov_terr,prov_terr
+timing,
+strong_mayor,
+n_answered,
+last_answered,

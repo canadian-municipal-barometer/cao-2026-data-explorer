@@ -1,0 +1,432 @@
+question,value,label
+job_tenure,1,1
+job_tenure,2,2
+job_tenure,3,3
+job_tenure,4,4
+job_tenure,5,5
+job_tenure,6,6
+job_tenure,7,7
+job_tenure,8,8
+job_tenure,9,9
+job_tenure,10,10
+job_tenure,11,11
+job_tenure,12,12
+job_tenure,13,13
+job_tenure,14,14
+job_tenure,15,15
+job_tenure,16,16
+job_tenure,17,17
+job_tenure,18,18
+job_tenure,19,19
+job_tenure,20,20
+job_tenure,21,21
+job_tenure,22,22
+job_tenure,23,23
+job_tenure,24,24
+job_tenure,25,25
+job_tenure,26,26
+job_tenure,27,27
+job_tenure,28,28
+job_tenure,29,29
+job_tenure,30,30
+job_tenure,31,31
+job_tenure,32,32
+job_tenure,33,33
+job_tenure,34,34
+job_tenure,35,35+
+innovation,1,Strongly Disagree
+innovation,2,Somewhat Disagree
+innovation,3,Somewhat Agree
+innovation,4,Strongly Agree
+innovation,-99,Don’t Know / No Opinion
+red_tape,1,Strongly Disagree
+red_tape,2,Somewhat Disagree
+red_tape,3,Somewhat Agree
+red_tape,4,Strongly Agree
+red_tape,-99,Don’t Know / No Opinion
+policy_implement,1,Strongly Disagree
+policy_implement,2,Somewhat Disagree
+policy_implement,3,Somewhat Agree
+policy_implement,4,Strongly Agree
+policy_implement,-99,Don’t Know / No Opinion
+policy_lead,1,Strongly Disagree
+policy_lead,2,Somewhat Disagree
+policy_lead,3,Somewhat Agree
+policy_lead,4,Strongly Agree
+policy_lead,-99,Don’t Know / No Opinion
+time_infrastructure,1,Strongly Disagree
+time_infrastructure,2,Somewhat Disagree
+time_infrastructure,3,Somewhat Agree
+time_infrastructure,4,Strongly Agree
+time_infrastructure,-99,Don’t Know / No Opinion
+time_challenges,1,Strongly Disagree
+time_challenges,2,Somewhat Disagree
+time_challenges,3,Somewhat Agree
+time_challenges,4,Strongly Agree
+time_challenges,-99,Don’t Know / No Opinion
+time_facilities,1,Strongly Disagree
+time_facilities,2,Somewhat Disagree
+time_facilities,3,Somewhat Agree
+time_facilities,4,Strongly Agree
+time_facilities,-99,Don’t Know / No Opinion
+legitimacy_experts,1,Strongly Disagree
+legitimacy_experts,2,Somewhat Disagree
+legitimacy_experts,3,Somewhat Agree
+legitimacy_experts,4,Strongly Agree
+legitimacy_experts,-99,Don’t Know / No Opinion
+issue_livingwage,1,Strongly Disagree
+issue_livingwage,2,Somewhat Disagree
+issue_livingwage,3,Somewhat Agree
+issue_livingwage,4,Strongly Agree
+issue_livingwage,-99,Don't know / No Opinion
+issue_climatechange,1,Strongly Disagree
+issue_climatechange,2,Somewhat Disagree
+issue_climatechange,3,Somewhat Agree
+issue_climatechange,4,Strongly Agree
+issue_climatechange,-99,Don't know / No Opinion
+issue_socialservices,1,Strongly Disagree
+issue_socialservices,2,Somewhat Disagree
+issue_socialservices,3,Somewhat Agree
+issue_socialservices,4,Strongly Agree
+issue_socialservices,-99,Don't know / No Opinion
+issue_activetrans,1,Strongly Disagree
+issue_activetrans,2,Somewhat Disagree
+issue_activetrans,3,Somewhat Agree
+issue_activetrans,4,Strongly Agree
+issue_activetrans,-99,Don't know / No Opinion
+issue_density,1,Strongly Disagree
+issue_density,2,Somewhat Disagree
+issue_density,3,Somewhat Agree
+issue_density,4,Strongly Agree
+issue_density,-99,Don't know / No Opinion
+issue_subsidies,1,Strongly Disagree
+issue_subsidies,2,Somewhat Disagree
+issue_subsidies,3,Somewhat Agree
+issue_subsidies,4,Strongly Agree
+issue_subsidies,-99,Don't know / No Opinion
+issue_landmarks,1,Strongly Disagree
+issue_landmarks,2,Somewhat Disagree
+issue_landmarks,3,Somewhat Agree
+issue_landmarks,4,Strongly Agree
+issue_landmarks,-99,Don't know / No Opinion
+ideol,0,0
+ideol,1,1
+ideol,2,2
+ideol,3,3
+ideol,4,4
+ideol,5,5
+ideol,6,6
+ideol,7,7
+ideol,8,8
+ideol,9,9
+ideol,10,10
+ideol,-99,Don't know
+ideo_anchor,0,0 - Left
+ideo_anchor,1,1
+ideo_anchor,2,2
+ideo_anchor,3,3
+ideo_anchor,4,4
+ideo_anchor,5,5 - Centre
+ideo_anchor,6,6
+ideo_anchor,7,7
+ideo_anchor,8,8
+ideo_anchor,9,9
+ideo_anchor,10,10 - Right
+ideo_anchor,-99,Don't know
+yob,2008,2008
+yob,2007,2007
+yob,2006,2006
+yob,2005,2005
+yob,2004,2004
+yob,2003,2003
+yob,2002,2002
+yob,2001,2001
+yob,2000,2000
+yob,1999,1999
+yob,1998,1998
+yob,1997,1997
+yob,1996,1996
+yob,1995,1995
+yob,1994,1994
+yob,1993,1993
+yob,1992,1992
+yob,1991,1991
+yob,1990,1990
+yob,1989,1989
+yob,1988,1988
+yob,1987,1987
+yob,1986,1986
+yob,1985,1985
+yob,1984,1984
+yob,1983,1983
+yob,1982,1982
+yob,1982,1981
+yob,1980,1980
+yob,1979,1979
+yob,1978,1978
+yob,1977,1977
+yob,1976,1976
+yob,1975,1975
+yob,1974,1974
+yob,1973,1973
+yob,1971,1971
+yob,1970,1970
+yob,1969,1969
+yob,1968,1968
+yob,1967,1967
+yob,1966,1966
+yob,1965,1965
+yob,1964,1964
+yob,1963,1963
+yob,1962,1962
+yob,1961,1961
+yob,1960,1960
+yob,1959,1959
+yob,1958,1958
+yob,1957,1957
+yob,1956,1956
+yob,1955,1955
+yob,1954,1954
+yob,1953,1953
+yob,1952,1952
+yob,1951,1951
+yob,1950,1950
+yob,1949,1949
+yob,1948,1948
+yob,1947,1947
+yob,1946,1946
+yob,1945,1945
+yob,1944,1944
+yob,1943,1943
+yob,1942,1942
+yob,1941,1941
+yob,1940,1940
+yob,1939,1939
+yob,1938,1938
+yob,1937,1937
+yob,1936,1936
+yob,1935,1935
+yob,1934,1934
+yob,1933,1933
+yob,1932,1932
+yob,1931,1931
+yob,1930,1930
+yob,1929,1929
+yob,1928,1928
+yob,1926,1926
+yob,-9999,Prefer not to say
+gender,0,Man
+gender,1,Woman
+gender,8,Non-binary/Two-spirit
+gender,9,Another gender (please specify):
+housing,1,I live in a home owned by myself and/or my partner/spouse
+housing,2,I live in a home owned by someone else but do not pay rent
+housing,3,"I live in a home owned by a family member, and I pay rent"
+housing,4,"I live in a home owned by someone who is not a family member, and I pay rent"
+housing,-99,Prefer not to say
+ideology,0,0 - Left
+ideology,1,1
+ideology,2,2
+ideology,3,3
+ideology,4,4
+ideology,5,5
+ideology,6,6
+ideology,7,7
+ideology,8,8
+ideology,9,9
+ideology,10,10 - Right
+ideology,-99,Don't know
+anchor_ideo,0,0
+anchor_ideo,1,1
+anchor_ideo,2,2
+anchor_ideo,3,3
+anchor_ideo,4,4
+anchor_ideo,5,5
+anchor_ideo,6,6
+anchor_ideo,7,7
+anchor_ideo,8,8
+anchor_ideo,9,9
+anchor_ideo,10,10
+anchor_ideo,-99,Don't know
+legitimacy_info,1,Strongly Disagree
+legitimacy_info,2,Somewhat Disagree
+legitimacy_info,3,Somewhat Agree
+legitimacy_info,4,Strongly Agree
+legitimacy_info,-99,Don’t Know / No Opinion
+legitimacy_consult,1,Strongly Disagree
+legitimacy_consult,2,Somewhat Disagree
+legitimacy_consult,3,Somewhat Agree
+legitimacy_consult,4,Strongly Agree
+legitimacy_consult,-99,Don’t Know / No Opinion
+job_environment,1,Same municipal government as now
+job_environment,2,Other municipal government(s)
+job_environment,3,First Nation government(s)
+job_environment,4,Provincial government
+job_environment,5,Federal government
+job_environment,6,"Other public authority (agency, board, commission, utility, etc.)"
+job_environment,7,Private sector
+job_environment,8,Non-profit sector
+time_use,1,Interacting with members of council
+time_use,2,Interacting with the head of council
+time_use,3,Interacting with municipal staff
+time_use,4,Interacting with other levels of government
+time_use,5,Interacting with the general public and stakeholders
+time_use,6,All other tasks
+incivility_prev,1,Never
+incivility_prev,2,Rarely
+incivility_prev,3,Sometimes
+incivility_prev,4,Often
+incivility_prev,5,Very often
+incivility_govern,1,Strongly Disagree
+incivility_govern,2,Somewhat Disagree
+incivility_govern,3,Somewhat Agree
+incivility_govern,4,Strongly Agree
+incivility_govern,-99,Don’t Know / No Opinion
+incivility_staff,1,Strongly Disagree
+incivility_staff,2,Somewhat Disagree
+incivility_staff,3,Somewhat Agree
+incivility_staff,4,Strongly Agree
+incivility_staff,-99,Don’t Know / No Opinion
+incivility_trust,1,Strongly Disagree
+incivility_trust,2,Somewhat Disagree
+incivility_trust,3,Somewhat Agree
+incivility_trust,4,Strongly Agree
+incivility_trust,-99,Don’t Know / No Opinion
+incivility_costs,1,Strongly Disagree
+incivility_costs,2,Somewhat Disagree
+incivility_costs,3,Somewhat Agree
+incivility_costs,4,Strongly Agree
+incivility_costs,-99,Don’t Know / No Opinion
+incivility_readiness,1,Very well equipped
+incivility_readiness,2,Somewhat well equipped
+incivility_readiness,3,Somewhat poorly equipped
+incivility_readiness,4,Very poorly equipped
+incivility_readiness,-99,Don’t know / no opinion
+innovation_barriers,1,Not at all important
+innovation_barriers,2,Slightly important
+innovation_barriers,3,Moderately important
+innovation_barriers,4,Very important
+innovation_barriers,5,Extremely Important
+indig_important,1,Not at all
+indig_important,2,Slightly important
+indig_important,3,Moderately important
+indig_important,4,Very important
+indig_important,5,Extremely important
+job_background,1,Communications
+job_background,2,Economic Development
+job_background,3,Engineering
+job_background,4,Environment & Sustainability
+job_background,5,Facilities Management
+job_background,6,Finance
+job_background,7,Health & Social Services
+job_background,8,Human Resources
+job_background,9,Information Technology
+job_background,10,Law / Legal Services
+job_background,11,Legislative Services / Municipal Clerk
+job_background,12,Parks & Recreation
+job_background,13,Planning & Development
+job_background,14,"Public Safety (e.g., Fire, Police)"
+job_background,15,Public Works
+job_background,16,Other (Please specify):
+indig_focus,1,a. Indigenous residents within municipal boundaries
+indig_focus,2,"b. Indigenous peoples, communities, and nations in the broader region surrounding my municipality"
+indig_focus,3,Both a and b
+indig_established,1,"My municipality has been active in Indigenous affairs/municipal-Indigenous relations for decades, and our relationship continues to grow."
+indig_established,2,My municipality’s activity in Indigenous affairs/municipal-Indigenous relations began in recent years and is now well established.
+indig_established,3,Indigenous affairs/municipal-Indigenous relations are on the agenda in my municipality and my municipality is beginning to engage in this area.
+indig_established,4,My municipality is not active in Indigenous affairs/municipal-Indigenous relations.
+indig_champions,1,The public/local community
+indig_champions,2,The mayor
+indig_champions,3,A councillor or councillors
+indig_champions,4,City staff
+indig_champions,5,Indigenous organizations located in the municipality
+indig_champions,6,"National, provincial, or regional Indigenous organizations"
+indig_champions,7,Leaders of Indigenous communities adjacent to the municipality
+indig_champions,8,Non-Indigenous organizations in the municipality
+indig_champions,9,"The Truth and Reconciliation Commission, through its Calls to Action"
+indig_champions,10,The provincial government
+indig_champions,11,The federal government
+indig_champions,12,The Federation of Canadian Municipalities (FCM) or provincial municipal associations
+indig_champions,-99,None of the above
+indig_initiatives,1,Territorial or land acknowledgment
+indig_initiatives,2,Flying Indigenous flag(s)
+indig_initiatives,3,Endorsement or adoption of the Truth and Reconciliation Commission’s Calls to Action
+indig_initiatives,4,Endorsement or adoption of the United Nations Declaration on the Rights of Indigenous Peoples
+indig_initiatives,5,Indigenous advisory committee to council
+indig_initiatives,6,Staff person or people devoted to Indigenous relations/affairs
+indig_initiatives,7,Separate office for Indigenous Affairs / Relations
+indig_initiatives,8,Staff training in decolonization
+indig_initiatives,9,Council-to-Council meetings and protocols with First Nations and/or Métis councils
+indig_initiatives,10,"Public educational events on the history of Indigenous peoples, treaties and/or colonization"
+indig_initiatives,11,Commitment to consult Indigenous peoples on planning and development that affects their traditional lands
+indig_initiatives,12,Social development initiatives in partnership with Indigenous peoples
+indig_initiatives,13,Economic development and/or property development initiatives in partnership with Indigenous peoples
+indig_initiatives,14,"Indigenous inclusion in cultural Initiatives (such as city identity, urban design, art and education)"
+indig_initiatives,15,"Shared service agreements (e.g., regarding policing or public transit)"
+strongmayor_use,1,"Yes, frequently"
+strongmayor_use,2,"Yes, occasionally"
+strongmayor_use,3,"No, but considered"
+strongmayor_use,4,"No, not at all"
+strongmayor_effect,1,Strongly Agree
+strongmayor_effect,2,Somewhat Agree
+strongmayor_effect,3,Neither Agree Nor Disagree
+strongmayor_effect,4,Somewhat Disagree
+strongmayor_effect,5,Strongly Disagree
+education,1,Did not complete high school
+education,2,Completed high school
+education,3,Some postsecondary (no diploma/degree)
+education,4,Completed apprenticeship/skilled trade
+education,5,Completed technical/community college degree or diploma
+education,5,Completed CEGEP or technical college diploma
+education,6,Bachelor’s degree
+education,7,Master’s degree
+education,8,Professional degree or doctorate
+educ_specific,1,B.Sc. in natural sciences
+educ_specific,2,"B.A. in arts, humanities, or social sciences"
+educ_specific,3,"M.A. in arts, humanities or social sciences"
+educ_specific,4,M.Sc. in natural sciences
+educ_specific,5,Diploma or degree in Public administration
+educ_specific,6,Diploma or degree in Business administration
+educ_specific,7,Degree in Engineering
+educ_specific,8,Degree in Planning
+educ_specific,9,Degree in Accounting or finance
+educ_specific,10,Degree in Law
+educ_specific,11,Ph.D. (in any field)
+educ_specific,12,Other post-secondary degree or diploma
+race,1,Arab
+race,2,Black
+race,3,Chinese
+race,4,Filipino
+race,5,"Indigenous (Inuit, Métis, First Nations)"
+race,6,Japanese
+race,7,Korean
+race,8,Latin American
+race,9,"South Asian (e.g. East Indian, Pakistani, Sri Lankan, etc.)"
+race,10,"Southeast Asian (e.g. Vietnamese, Cambodian, Malaysian, Laotian, etc.)"
+race,11,"West Asian (e.g. Iranian, Afghan, etc.)"
+race,12,White
+race,13,Other (Please specify):
+results,1,Yes
+results,2,No
+interview,1,Yes
+interview,2,No
+consent,1,CONSENT AND CONTINUE
+consent,2,QUIT
+race,1,Arab
+race,2,Black
+race,3,Chinese
+race,4,Filipino
+race,5,"Indigenous (Inuit, Métis, First Nations)"
+race,6,Japanese
+race,7,Korean
+race,8,Latin American
+race,9,"South Asian (e.g. East Indian, Pakistani, Sri Lankan, etc.)"
+race,10,"Southeast Asian (e.g. Vietnamese, Cambodian, Malaysian, Laotian, etc.)"
+race,11,"West Asian (e.g. Iranian, Afghan, etc.)"
+race,12,White
+race,13,Other
+psm,1,Strongly Disagree
+psm,2,Somewhat Disagree
+psm,3,Somewhat Agree
+psm,4,Strongly Agree
+psm,-99,Don’t Know / No Opinion
