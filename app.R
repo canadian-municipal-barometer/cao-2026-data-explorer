@@ -31,9 +31,9 @@
 #                                         cat  x cat   -> 100% stacked bars     (Cramer's V)
 #                                       lm + loess lines appear only on a Scatter
 #                                       of two continuous / interval items.
-#   4. Single-variable view          -- histogram (continuous, bins slider) or
+#   4. Univariate distribution       -- histogram (continuous, bins slider) or
 #                                       bar chart (ordinal / categorical)
-#   5. Variable dictionary           -- question wording + type for every item
+#   5. Data dictionary               -- question wording + type for every item
 #
 # Run from the project root:
 #   shiny::runApp("analysis/eda-shiny")
@@ -579,8 +579,8 @@ main_ui <- div(
             tags$a(href = "#sec-1", "1. Spearman correlation heatmap"),
             tags$a(href = "#sec-2", "2. Most strongly correlated pairs"),
             tags$a(href = "#sec-3", "3. Bivariate comparison"),
-            tags$a(href = "#sec-4", "4. Single-variable distribution"),
-            tags$a(href = "#sec-5", "5. Variable dictionary")
+            tags$a(href = "#sec-4", "4. Univariate Distribution"),
+            tags$a(href = "#sec-5", "5. Data Dictionary")
           )
         )
       )
@@ -717,11 +717,11 @@ main_ui <- div(
     )
   ),
 
-  # 4. SINGLE-VARIABLE DISTRIBUTION -------------------------------------------
+  # 4. UNIVARIATE DISTRIBUTION -------------------------------------------------
   card(
     id = "sec-4",
     class = "section-card",
-    card_header("4. Single-variable distribution"),
+    card_header("4. Univariate Distribution"),
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
@@ -747,11 +747,11 @@ main_ui <- div(
     )
   ),
 
-  # 5. VARIABLE DICTIONARY -----------------------------------------------------
+  # 5. DATA DICTIONARY ----------------------------------------------------------
   card(
     id = "sec-5",
     class = "section-card",
-    card_header("5. Variable dictionary"),
+    card_header("5. Data Dictionary"),
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
@@ -1010,7 +1010,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # --- 3. Single-variable distribution --------------------------------------
+  # --- 3. Univariate distribution --------------------------------------------
   # Multi-selects draw one bar per option with wrapped labels, so give them
   # ~32px per option instead of the fixed height everything else uses.
   uni_plot_height <- function() {
