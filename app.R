@@ -410,7 +410,12 @@ crosstab_plot <- function(df, xvar, yvar) {
   }
   ggplot(cnt, aes(x, y, fill = prop)) +
     geom_tile(colour = "white") +
-    geom_text(aes(label = Freq), size = 3, colour = "grey20") +
+    geom_label(
+      aes(label = Freq),
+      size = 3,
+      fill = "white",
+      border.color = "white"
+    ) +
     scale_fill_gradient(
       low = "white",
       high = "#2c3e50",
@@ -644,6 +649,10 @@ main_ui <- div(
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
+        p(
+          class = "text-muted small",
+          "View scatter, box/violin, cross-tab heatmap, or stacked bars for any two variables."
+        ),
         p(
           class = "text-muted small",
           "Pick an X variable, a Y variable, and a plot type. “Auto” chooses the plot from the two variables' measurement levels; you can override it. The association statistic below the plot always follows the measurement levels (Pearson r / Spearman ρ / η² / Cramér's V)."
