@@ -525,7 +525,7 @@ main_ui <- div(
   div(
     class = "topbar",
     tags$button(
-      HTML("&#9776;"),
+      "Contents",
       class = "btn btn-outline-secondary toc-btn",
       `data-bs-toggle` = "modal",
       `data-bs-target` = "#tocMenu",
@@ -938,13 +938,14 @@ server <- function(input, output, session) {
     } else {
       # stacked
       validate(need(
-        nlev(d[[x]]) <= 40 && nlev(d[[y]]) <= 30,
-        "Stacked bars work for discrete variables; one of these has too many values."
+        nlev(d[[x]]) <= 40 && nlev(d[[y]]) <= 8,
+        "Stacked bars are limited to 8 or fewer categories in the Y variable."
       ))
       d[[x]] <- labeled_factor(d[[x]], x)
       d[[y]] <- labeled_factor(d[[y]], y)
       ggplot(d, aes(.data[[x]], fill = .data[[y]])) +
         geom_bar(position = "fill") +
+        scale_fill_brewer(palette = "Set2") +
         scale_y_continuous(labels = percent) +
         labs(x = paste0(x, "  —  ", label_of(x)), y = "Share", fill = y) +
         theme_eda +
