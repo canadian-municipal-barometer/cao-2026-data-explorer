@@ -1,18 +1,40 @@
-# CAO 2026 — EDA Shiny app
+# CAO 2026 — Exploratory Data Analyzer
 
-A scrollable, report-style Shiny app for exploring
-`data/clean/cao-2026-clean.csv`.
+A password-gated, scrollable, report-style Shiny app for exploring the cleaned
+CAO 2026 survey data. The app reads the data live from the project's Google
+Sheet (the published output of the CAOs project's `data/clean.R` pipeline) and
+deploys to Posit Connect Cloud.
 
-## Run
+## Run locally
 
-From the project root:
+From this directory:
 
 ```r
-shiny::runApp("analysis/eda-shiny")
+shiny::runApp()
 ```
 
+The whole app sits behind a single password taken from the `PASSWORD`
+environment variable (kept in the gitignored `.env.local`; on Connect Cloud it
+is set in the content settings). If `PASSWORD` is unset the app stays locked —
+it fails closed.
+
 Requires: `shiny`, `bslib`, `ggplot2`, `dplyr`, `tidyr`, `forcats`, `scales`,
-`patchwork`, `DT`, `readr` (all already installed on this machine).
+`patchwork`, `DT`, `googlesheets4`, `readr`.
+
+## Data loading
+
+- The sheet is read anonymously (`gs4_deauth()`); column types are forced via
+  `schema.rds`, a saved `readr` spec. Regenerate it with
+  `scripts/generate-schema.R` if the cleaned data's columns change.
+- **`"NULL"` parses to `NA`.** `read_sheet()` returns mixed columns as
+  list-columns whose empty cells are R `NULL`s, which the character coercion
+  renders as the literal string `"NULL"` — it is included in the `na` strings
+  so empty cells never count as answers.
+- **`-99` ("Don't know / No Opinion") is recoded to `NA` on numeric items
+  only.** Left in, it wrecks every correlation, fit line, and median (e.g.
+  `ideology` would run `-99..10`). Categorical variables keep it, where it
+  decodes to a real answer category (`housing` "Prefer not to say",
+  `indig_champions` "None of the above").
 
 ## Measurement levels (this drives everything)
 
@@ -20,60 +42,85 @@ Almost nothing in this instrument is truly continuous — most items are ordinal
 Likert scales, so the app classifies every variable and picks measurement-
 appropriate plots and statistics:
 
-- **continuous / interval** (14): `yob` (age), `job_tenure`, `time_use_1..6`
-  (% of time), and the 0–10 `ideology` / `anchor_ideo_*` scales (treated as
-  interval). *The only items that get a scatter + line of best fit.*
-- **ordinal** (45): the 4–5 point Likert items (`issue_*`, `incivility_*`,
+- **continuous / interval**: `yob`, `job_tenure`, `time_use_*` (% of time),
+  and the 0–10 `ideology` / `anchor_ideo_*` scales (treated as interval).
+  *The only items that get a scatter + line of best fit.*
+- **ordinal**: the 4–5 point Likert items (`issue_*`, `incivility_*`,
   `legitimacy_*`, `strongmayor_effect_*`, `innovation_barriers_*`, …).
-- **categorical** (13): coded nominal factors — `gender`, `race`, `prov_terr`,
-  the comma-coded multi-selects, and the numeric-coded nominals `educ_valuable`
-  (which credential) and `job_longest` (which sector).
+- **categorical**: coded nominal factors — `gender`, `race`, `prov_terr`, the
+  multi-selects, and the numeric-coded nominals `educ_valuable` (which
+  credential) and `job_longest` (which sector).
+- **multi-selects** (subset of categorical): `race`, `educ_specific`,
+  `job_environment`, `job_background`, `indig_champions`,
+  `indig_initiatives` — semicolon-combined "select all that apply" sets
+  (`"2;12"`) built by the cleaning pipeline.
+
+Classification lives at the top of `app.R`: `admin_drop` removes process
+metadata and free text; `continuous_vars`, `categorical_vars`, and
+`multiselect_vars` are curated lists; everything else numeric falls through to
+`ordinal_vars`. Adjust those vectors to re-scope — in particular, whether the
+0–10 scales count as interval or ordinal is a judgement call you can flip.
 
 ## Sections
 
-1. **Spearman correlation heatmap** — **Spearman's ρ** (rank correlation, right
-   for ordinal data) across all continuous + ordinal items, optionally reordered
-   by hierarchical clustering. The overview for spotting pairs worth examining.
-2. **Bivariate comparison** — three pickers: **X variable**, **Y variable**, and
-   **plot type**. Plot type defaults to **Auto**, which chooses the plot from the
-   two variables' measurement levels, but you can force any of: scatter +
-   lm/loess, box + violin, cross-tab heatmap, or 100 % stacked bars (with a
-   guard message when a forced type doesn't fit the data). Scatter also has
-   **colour-by** (categorical, per-group lm lines) and a **jitter** toggle. The
-   association statistic under the plot always follows the measurement levels:
+1. **Spearman correlation heatmap** — Spearman's ρ (rank correlation, right
+   for ordinal data) across all continuous + ordinal items, optionally
+   reordered by hierarchical clustering.
+2. **Most strongly correlated pairs** — the heatmap's strongest cells as a
+   live-ranked table: Spearman or Pearson, adjustable N, and an option to keep
+   only cross-battery pairs (hide items sharing a name prefix).
+3. **Bivariate comparison** — pick **X**, **Y**, and **plot type**. Plot type
+   defaults to **Auto**, which chooses from the two variables' measurement
+   levels, but any type can be forced (with a guard message when it doesn't
+   fit). Scatter adds **colour points by** (categorical, per-group lm lines,
+   value-labelled legend) and a **jitter** toggle. The association statistic
+   under the plot always follows the measurement levels:
    - continuous × continuous → **Pearson r** (Auto → scatter + lm/loess)
    - continuous × ordinal → **Spearman ρ** (Auto → box + violin by level)
-   - ordinal × ordinal → **Spearman ρ** (Auto → cross-tab heatmap, cells =
-     counts shaded by row-conditional %)
+   - ordinal × ordinal → **Spearman ρ** (Auto → cross-tab heatmap)
    - numeric × categorical → **η² / ANOVA p** (Auto → box + violin)
-   - categorical × categorical → **Cramér's V / χ² p** (Auto → 100 % stacked bars)
+   - categorical × categorical → **Cramér's V / χ² p** (Auto → 100 % stacked
+     bars)
+4. **Univariate Distribution** — histogram (continuous, with a bins slider) or
+   bar chart (ordinal / categorical), plus a summary line matched to the
+   measurement level. Multi-selects get one bar per **option** — the share of
+   respondents selecting it, decoded labels, height adapted to the option
+   count — with a note explaining that respondents can appear in several bars.
+5. **Data Dictionary** — searchable table of every variable: name, measurement
+   level (multi-selects tagged), question wording, and value labels.
 
-   A line of best fit therefore only appears on a Scatter of two continuous /
-   interval items — the only place it is meaningful.
-3. **Single-variable distribution** — histogram (continuous, with a **bins
-   slider**) or bar chart (ordinal / categorical), plus summary statistics.
-4. **Variable dictionary** — searchable table of every variable, its
-   measurement level, and its question wording.
+## Question wording and value labels
 
-## Design notes / data handling
+- **`labels.csv`** maps each variable to its survey question wording (matrix
+  stems are trimmed to the sub-item for display).
+- **`value_labels.csv`** maps numeric codes to answer text
+  (`question, value, label`). It is generated by `fetch-labels.R` in the CAOs
+  project repo from the Qualtrics survey definition, which also mirrors
+  `clean.R`'s recodes and duplicates coding for the carry-forward questions
+  (`educ_valuable` reuses `educ_specific`'s codes, `job_longest` reuses
+  `job_environment`'s — carry-forward questions have no choices of their own
+  in the survey definition).
+- Labels are applied on discrete axes and legends only when **every** observed
+  code is covered, so combined multi-select strings (`"2;12"`) fall back to
+  raw codes everywhere except the per-option univariate view.
 
-- **`-99` is recoded to `NA`.** It is a "don't know / refused" sentinel present
-  in 26 numeric items (e.g. `ideology` runs `-99..10`); left in, it would wreck
-  every correlation and line of best fit.
-- **Variable classification** (`app.R`, top): `admin_drop` removes process
-  metadata, free-text, and derived columns; `continuous_vars` and
-  `categorical_vars` are curated lists; everything else numeric falls through to
-  `ordinal_vars`. Adjust these three vectors to re-scope. In particular, whether
-  the 0–10 scales count as interval (currently in `continuous_vars`) or ordinal
-  is a judgement call you can flip.
-- **`labels.csv`** maps each variable to its survey question wording. It is
-  generated from the raw Qualtrics header rows (question text only, no
-  respondent data). Regenerate with `scratchpad/gen_labels.R` if the instrument
-  changes.
+## Deployment
+
+Deployed on **Posit Connect Cloud**, git-backed from this repo's `main` on
+GitHub — pushing to `main` redeploys. `manifest.json` records the package
+environment; regenerate with `rsconnect::writeManifest()` when dependencies
+change. Set `PASSWORD` in the content's environment variables.
+
+One hosting gotcha: Connect serves the app with an injected
+`<base href="_w_<id>/">` plus a click handler that rewrites anchor `href`
+attributes to absolute URLs. In-app JavaScript must resolve anchor targets
+from `a.hash` (as the contents-menu script does), never from the `href`
+attribute.
 
 ## Possible extensions
 
 - Missingness overview (per-item response counts / a missingness heatmap).
-- Weighting or subgroup filters (e.g. restrict to a province or `strong_mayor`).
+- Weighting or subgroup filters (e.g. restrict to a province or
+  `strong_mayor`).
 - Downloadable filtered data / plot export.
 - Reliability (Cronbach's α) for multi-item scales (incivility, legitimacy).
