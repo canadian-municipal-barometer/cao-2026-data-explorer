@@ -15,11 +15,14 @@
 # (and a short note) beside its plot/table.
 #
 # Sections:
-#   1. Spearman correlation heatmap  -- rank correlations across numeric items
-#   2. Most correlated pairs         -- the heatmap's strongest cells, ranked
+#   1. Univariate distribution       -- histogram (continuous, bins slider) or
+#                                       bar chart (ordinal / categorical), with
+#                                       bars in scale order and missings dropped
+#   2. Spearman correlation heatmap  -- rank correlations across numeric items
+#   3. Most correlated pairs         -- the heatmap's strongest cells, ranked
 #                                       live; Spearman/Pearson, adjustable N, and
 #                                       an option to hide within-battery pairs
-#   3. Bivariate comparison          -- three pickers: X, Y, and plot type. The
+#   4. Bivariate comparison          -- three pickers: X, Y, and plot type. The
 #                                       plot type defaults to "Auto" (chosen from
 #                                       the two variables' measurement levels) but
 #                                       can be forced. The association statistic
@@ -31,8 +34,6 @@
 #                                         cat  x cat   -> 100% stacked bars     (Cramer's V)
 #                                       lm + loess lines appear only on a Scatter
 #                                       of two continuous / interval items.
-#   4. Univariate distribution       -- histogram (continuous, bins slider) or
-#                                       bar chart (ordinal / categorical)
 #   5. Data dictionary               -- question wording + type for every item
 #
 # Run from the project root:
@@ -588,10 +589,10 @@ main_ui <- div(
           class = "modal-body",
           tags$nav(
             class = "toc-nav",
-            tags$a(href = "#sec-1", "1. Spearman correlation heatmap"),
-            tags$a(href = "#sec-2", "2. Most strongly correlated pairs"),
-            tags$a(href = "#sec-3", "3. Bivariate comparison"),
-            tags$a(href = "#sec-4", "4. Univariate Distribution"),
+            tags$a(href = "#sec-1", "1. Univariate Distribution"),
+            tags$a(href = "#sec-2", "2. Spearman correlation heatmap"),
+            tags$a(href = "#sec-3", "3. Most strongly correlated pairs"),
+            tags$a(href = "#sec-4", "4. Bivariate comparison"),
             tags$a(href = "#sec-5", "5. Data Dictionary")
           )
         )
@@ -625,11 +626,41 @@ main_ui <- div(
        });"
   )),
 
-  # 1. SPEARMAN HEATMAP --------------------------------------------------------
+  # 1. UNIVARIATE DISTRIBUTION -------------------------------------------------
   card(
     id = "sec-1",
     class = "section-card",
-    card_header("1. Spearman correlation heatmap (numeric items)"),
+    card_header("1. Univariate Distribution"),
+    layout_sidebar(
+      sidebar = sidebar(
+        width = 320,
+        selectInput(
+          "uni_var",
+          "Variable",
+          choices = choice_labels(all_pickable),
+          selected = continuous_vars[1]
+        ),
+        sliderInput(
+          "uni_bins",
+          "Number of bins (continuous only)",
+          min = 2,
+          max = 60,
+          value = 20
+        )
+      ),
+      textOutput("uni_summary"),
+      uiOutput("uni_note"),
+      # "auto" so the renderPlot height function (one bar per option needs
+      # more room on the multi-selects) controls the rendered size.
+      plotOutput("uni_plot", height = "auto")
+    )
+  ),
+
+  # 2. SPEARMAN HEATMAP --------------------------------------------------------
+  card(
+    id = "sec-2",
+    class = "section-card",
+    card_header("2. Spearman correlation heatmap (numeric items)"),
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
@@ -647,12 +678,12 @@ main_ui <- div(
     )
   ),
 
-  # 2. MOST CORRELATED PAIRS ---------------------------------------------------
+  # 3. MOST CORRELATED PAIRS ---------------------------------------------------
   card(
-    id = "sec-2",
+    id = "sec-3",
     class = "section-card",
     height = "820px",
-    card_header("2. Most strongly correlated pairs"),
+    card_header("3. Most strongly correlated pairs"),
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
@@ -684,11 +715,11 @@ main_ui <- div(
     )
   ),
 
-  # 3. BIVARIATE COMPARISON ----------------------------------------------------
+  # 4. BIVARIATE COMPARISON ----------------------------------------------------
   card(
-    id = "sec-3",
+    id = "sec-4",
     class = "section-card",
-    card_header("3. Bivariate comparison (any two variables)"),
+    card_header("4. Bivariate comparison (any two variables)"),
     layout_sidebar(
       sidebar = sidebar(
         width = 320,
@@ -726,36 +757,6 @@ main_ui <- div(
       ),
       strong(textOutput("bv_stat")),
       div(class = "grid-frame", plotOutput("bv_plot", height = "560px"))
-    )
-  ),
-
-  # 4. UNIVARIATE DISTRIBUTION -------------------------------------------------
-  card(
-    id = "sec-4",
-    class = "section-card",
-    card_header("4. Univariate Distribution"),
-    layout_sidebar(
-      sidebar = sidebar(
-        width = 320,
-        selectInput(
-          "uni_var",
-          "Variable",
-          choices = choice_labels(all_pickable),
-          selected = continuous_vars[1]
-        ),
-        sliderInput(
-          "uni_bins",
-          "Number of bins (continuous only)",
-          min = 2,
-          max = 60,
-          value = 20
-        )
-      ),
-      textOutput("uni_summary"),
-      uiOutput("uni_note"),
-      # "auto" so the renderPlot height function (one bar per option needs
-      # more room on the multi-selects) controls the rendered size.
-      plotOutput("uni_plot", height = "auto")
     )
   ),
 
@@ -1043,7 +1044,7 @@ server <- function(input, output, session) {
     v <- input$uni_var
     req(v)
     if (var_type(v) == "continuous") {
-      ggplot(dat, aes(.data[[v]])) +
+      ggplot(dat[!is.na(dat[[v]]), , drop = FALSE], aes(.data[[v]])) +
         geom_histogram(
           bins = input$uni_bins,
           fill = "#2c3e50",
@@ -1078,7 +1079,11 @@ server <- function(input, output, session) {
         theme_eda +
         theme(axis.text.y = element_text(size = 10, lineheight = 0.9))
     } else {
-      dd <- tibble(.lab = fct_infreq(labeled_factor(dat[[v]], v)))
+      # Order the x axis by the scale (numeric code / level) order rather than
+      # by frequency — labeled_factor already builds levels in numeric order.
+      # Drop missings so no NA bar appears.
+      dd <- tibble(.lab = labeled_factor(dat[[v]], v))
+      dd <- dd[!is.na(dd$.lab), , drop = FALSE]
       ggplot(dd, aes(.lab)) +
         geom_bar(fill = "#2c3e50") +
         geom_text(
