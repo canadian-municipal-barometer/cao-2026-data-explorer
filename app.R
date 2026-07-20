@@ -1080,10 +1080,20 @@ server <- function(input, output, session) {
         theme(axis.text.y = element_text(size = 10, lineheight = 0.9))
     } else {
       # Order the x axis by the scale (numeric code / level) order rather than
-      # by frequency — labeled_factor already builds levels in numeric order.
-      # Drop missings so no NA bar appears.
-      dd <- tibble(.lab = labeled_factor(dat[[v]], v))
-      dd <- dd[!is.na(dd$.lab), , drop = FALSE]
+      # by frequency, and drop missings so no NA bar appears. When the full set
+      # of scale codes is known (value labels), build the factor from every
+      # code — not just the observed ones — so scale points with a zero count
+      # still get a tick on the axis (drop = FALSE keeps them from being
+      # collapsed away).
+      x <- dat[[v]][!is.na(dat[[v]])]
+      vlt <- vl_for(v)
+      if (has_value_labels(v) && !is.null(vlt)) {
+        lv <- vlt$value[order(suppressWarnings(as.numeric(vlt$value)))]
+        lab <- factor(as.character(x), levels = lv, labels = decode(v, lv))
+      } else {
+        lab <- labeled_factor(x, v)
+      }
+      dd <- tibble(.lab = lab)
       ggplot(dd, aes(.lab)) +
         geom_bar(fill = "#2c3e50") +
         geom_text(
@@ -1092,6 +1102,7 @@ server <- function(input, output, session) {
           vjust = -0.5,
           size = 3.5
         ) +
+        scale_x_discrete(drop = FALSE) +
         labs(x = paste0(v, "  —  ", label_of(v)), y = "Count") +
         theme_eda +
         theme(axis.text.x = element_text(angle = 30, hjust = 1))
