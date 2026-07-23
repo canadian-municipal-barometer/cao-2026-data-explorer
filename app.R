@@ -219,12 +219,12 @@ multiselect_vars <- intersect(multiselect_vars, names(raw))
 # Census (2021) columns joined onto each respondent by clean.R via get-census.R.
 # They are municipality-level context, not survey answers, and are coarsened to
 # broad bands in clean.R so no exact value can re-identify a respondent's town.
-# Being
-# categorical, they sit alongside the coded survey factors: available in the
-# bivariate view (cross-tab a survey answer by, say, population band) and the
-# dictionary, but out of the numeric correlation views and the single-variable
-# distribution (a per-respondent bar of a municipality attribute double-counts
-# CSDs -- one town counted once per respondent).
+# Being categorical, they sit alongside the coded survey factors: available in
+# the bivariate view (cross-tab a survey answer by, say, population band), the
+# single-variable distribution, and the dictionary, but out of the numeric
+# correlation views. Read a census bar as per-respondent, not per-municipality:
+# a CSD with several respondents is counted once per respondent, so the bars
+# describe "respondents in a municipality of this type", not a municipality count.
 #
 # This table is also the source of the data-dictionary entries for these columns
 # (survey items get their wording from labels.csv; census columns get it here).
@@ -330,10 +330,12 @@ for (v in categorical_vars) {
 
 all_pickable <- sort(c(continuous_vars, ordinal_vars, categorical_vars))
 
-# Section 1 (univariate distribution) hides the census context columns: a
-# histogram of a municipality attribute across respondents double-counts CSDs
-# and isn't a survey distribution. Other sections keep the full list.
-uni_pickable <- setdiff(all_pickable, census_vars)
+# Section 1 (univariate distribution) offers every variable, including the
+# census context columns, so their band distributions across respondents can be
+# browsed. These are per-respondent counts of a municipality attribute (a CSD
+# with several respondents is counted once per respondent), not a municipality
+# tally -- see the census-classification note above.
+uni_pickable <- all_pickable
 
 var_type <- function(v) {
   if (v %in% continuous_vars) {
