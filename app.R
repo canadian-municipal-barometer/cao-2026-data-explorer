@@ -330,12 +330,15 @@ for (v in categorical_vars) {
 
 all_pickable <- sort(c(continuous_vars, ordinal_vars, categorical_vars))
 
-# Section 1 (univariate distribution) offers every variable, including the
-# census context columns, so their band distributions across respondents can be
-# browsed. These are per-respondent counts of a municipality attribute (a CSD
-# with several respondents is counted once per respondent), not a municipality
-# tally -- see the census-classification note above.
-uni_pickable <- all_pickable
+# Section 1 (univariate distribution) offers every substantive variable,
+# including the coarsened census context columns, so their band distributions
+# across respondents can be browsed. The census data-quality flag (pct_reliable)
+# is left out -- it describes the share estimates' reliability, not a respondent
+# attribute worth a distribution. Read a census bar as per-respondent, not
+# per-municipality (a CSD with several respondents is counted once per
+# respondent) -- see the census-classification note above.
+census_flag_vars <- census_dict$variable[census_dict$type == "flag"]
+uni_pickable <- setdiff(all_pickable, census_flag_vars)
 
 var_type <- function(v) {
   if (v %in% continuous_vars) {
