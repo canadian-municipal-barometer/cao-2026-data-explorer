@@ -97,7 +97,19 @@ raw <- read_sheet(data_url, sheet = "cao_clean") |>
 # respondent's municipality is ever published here. This app therefore receives
 # the census columns already as band labels (e.g. pop_2021 = "10,000–29,999");
 # census_levels below restores their band order when they become factors.
+#
+# Defence in depth: clean.R is the primary guard, but drop the exact identifier
+# and raw-count columns here as well, so a stale or mis-generated sheet can never
+# surface them. any_of() makes this a no-op once the sheet is clean. Without it,
+# a leftover raw count (e.g. pop_vis_min_total) reads back as numeric and slips
+# into numeric_like as a bogus "ordinal" variable.
 # ----------------------------------------------------------------------------
+census_identifier_drop <- c(
+  "census_id", "csd_name", "cd_uid", "cma_uid", "pr_uid",
+  "indigenous_identity", "pop_indigenous_total",
+  "visible_minority", "pop_vis_min_total"
+)
+raw <- select(raw, -any_of(census_identifier_drop))
 
 labels_tbl <- if (file.exists(labels_path)) {
   readr::read_csv(labels_path, show_col_types = FALSE)
