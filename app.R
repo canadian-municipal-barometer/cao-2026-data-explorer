@@ -60,10 +60,26 @@ suppressMessages({
 data_url <- "https://docs.google.com/spreadsheets/d/1ABKnu0gYexNZwGMyfQC97WDlgZkA2EhIDblKA7YheoQ/edit?gid=410479067#gid=410479067"
 labels_path <- "labels.csv"
 
-gs4_deauth()
+# Authenticate to the (now private) survey sheet with a Google service account.
+# The account's JSON key is NOT in this public repo -- it is base64-encoded into
+# the GOOGLE_SHEETS_SA_KEY environment variable (a Connect Cloud secret; read
+# from .env.local when running locally). Read-only scope, and we fail closed if
+# the key is missing so the app can never silently fall back to an
+# unauthenticated read of what is no longer a public sheet.
+if (file.exists(".env.local")) {
+  dotenv::load_dot_env(".env.local")
+}
+sa_key <- Sys.getenv("GOOGLE_SHEETS_SA_KEY")
+if (!nzchar(sa_key)) {
+  stop("GOOGLE_SHEETS_SA_KEY is not set; cannot read the survey sheet.")
+}
+gs4_auth(
+  path = rawToChar(openssl::base64_decode(sa_key)),
+  scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
+)
 schema <- readRDS("schema.rds")
 
-raw <- read_sheet(data_url) |>
+raw <- read_sheet(data_url, sheet = "cao_clean") |>
   # type_convert only applies to character type columns, so force character.
   # read_sheet returns mixed columns as list-columns whose empty cells are R
   # NULLs, and as.character() renders those as the literal string "NULL" --
