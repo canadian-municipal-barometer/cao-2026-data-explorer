@@ -237,13 +237,12 @@ multiselect_vars <- intersect(multiselect_vars, names(raw))
 census_dict <- tibble(
   variable = c(
     "municipal_status", "province", "pop_2021", "pop_density_km2", "area_km2",
-    "indigenous_pct", "visible_minority_pct", "pct_reliable",
-    "universe_coverage_pct"
+    "indigenous_pct", "visible_minority_pct", "pct_reliable"
   ),
   type = c(
     "categorical", "categorical", "categorical (binned)", "categorical (binned)",
     "categorical (binned)", "categorical (binned)", "categorical (binned)",
-    "flag", "categorical (binned)"
+    "flag"
   ),
   question = c(
     "Census subdivision type / municipal status",
@@ -260,8 +259,7 @@ census_dict <- tibble(
       "Reliability flag for the two % shares (pre-binning): FALSE when the",
       "denominator was too small for base-5 rounding, a share rounded past 100%,",
       "or a share was missing"
-    ),
-    "Band for the % of the CSD population covered by the shares' 25%-sample denominator"
+    )
   ),
   `value labels` = c(
     "e.g. CY city, T town, VL village, IRI Indian reserve, RGM regional municipality",
@@ -271,8 +269,7 @@ census_dict <- tibble(
     "km²: <10 · 10–99 · 100–499 · 500–1,999 · 2,000–9,999 · 10,000+",
     "0–4% · 5–9% · 10–24% · 25–49% · 50%+",
     "0–4% · 5–9% · 10–24% · 25–49% · 50%+",
-    "TRUE / FALSE",
-    "<90% · 90–99% · 100–109% · 110%+"
+    "TRUE / FALSE"
   )
 )
 census_dict <- census_dict[census_dict$variable %in% names(raw), , drop = FALSE]
@@ -313,8 +310,7 @@ census_levels <- list(
   pop_density_km2 = c("<1", "1–9", "10–49", "50–199", "200–999", "1,000+"),
   area_km2 = c("<10", "10–99", "100–499", "500–1,999", "2,000–9,999", "10,000+"),
   indigenous_pct = c("0–4%", "5–9%", "10–24%", "25–49%", "50%+"),
-  visible_minority_pct = c("0–4%", "5–9%", "10–24%", "25–49%", "50%+"),
-  universe_coverage_pct = c("<90%", "90–99%", "100–109%", "110%+")
+  visible_minority_pct = c("0–4%", "5–9%", "10–24%", "25–49%", "50%+")
 )
 
 # Coerce the categorical set to factors (many are semicolon-coded multi-selects);
