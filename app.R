@@ -87,6 +87,18 @@ raw <- read_sheet(data_url, sheet = "cao_clean") |>
   mutate(across(everything(), as.character)) |>
   type_convert(col_types = schema, na = c("", "NA", "NULL"))
 
+# ----------------------------------------------------------------------------
+# MUNICIPAL (CENSUS) CONTEXT ARRIVES PRE-COARSENED
+#
+# data/clean.R joins 2021-census columns onto each respondent and, before
+# writing this sheet, coarsens every municipal attribute to a broad band and
+# drops the exact geographic identifiers (CSD / CD / CMA codes, the CSD name,
+# census_id) and the raw counts -- so no exact value that could re-identify a
+# respondent's municipality is ever published here. This app therefore receives
+# the census columns already as band labels (e.g. pop_2021 = "10,000–29,999");
+# census_levels below restores their band order when they become factors.
+# ----------------------------------------------------------------------------
+
 labels_tbl <- if (file.exists(labels_path)) {
   readr::read_csv(labels_path, show_col_types = FALSE)
 } else {
@@ -192,6 +204,73 @@ multiselect_vars <- c(
 )
 multiselect_vars <- intersect(multiselect_vars, names(raw))
 
+# Census (2021) columns joined onto each respondent by clean.R via get-census.R.
+# They are municipality-level context, not survey answers, and are coarsened to
+# broad bands in clean.R so no exact value can re-identify a respondent's town.
+# Being
+# categorical, they sit alongside the coded survey factors: available in the
+# bivariate view (cross-tab a survey answer by, say, population band) and the
+# dictionary, but out of the numeric correlation views and the single-variable
+# distribution (a per-respondent bar of a municipality attribute double-counts
+# CSDs -- one town counted once per respondent).
+#
+# This table is also the source of the data-dictionary entries for these columns
+# (survey items get their wording from labels.csv; census columns get it here).
+# The `value labels` give each column's band cut-points -- keep them in step with
+# census_bands in clean.R (and census_levels below). The two percentage shares
+# were computed against the
+# variable's published 25%-sample universe before binning -- see get-census.R for
+# why they are not taken over population, and why "visible minority" excludes
+# Indigenous people.
+census_dict <- tibble(
+  variable = c(
+    "municipal_status", "province", "pop_2021", "pop_density_km2", "area_km2",
+    "indigenous_pct", "visible_minority_pct", "pct_reliable",
+    "universe_coverage_pct"
+  ),
+  type = c(
+    "categorical", "categorical", "categorical (binned)", "categorical (binned)",
+    "categorical (binned)", "categorical (binned)", "categorical (binned)",
+    "flag", "categorical (binned)"
+  ),
+  question = c(
+    "Census subdivision type / municipal status",
+    "Province or territory",
+    "Municipality population band, 2021 Census",
+    "Population-density band, 2021 Census",
+    "Land-area band",
+    "Band for the share of the population with an Indigenous identity, 2021 Census",
+    paste(
+      "Band for the share who are a visible minority, 2021 Census",
+      "(Employment Equity definition -- excludes Indigenous people)"
+    ),
+    paste(
+      "Reliability flag for the two % shares (pre-binning): FALSE when the",
+      "denominator was too small for base-5 rounding, a share rounded past 100%,",
+      "or a share was missing"
+    ),
+    "Band for the % of the CSD population covered by the shares' 25%-sample denominator"
+  ),
+  `value labels` = c(
+    "e.g. CY city, T town, VL village, IRI Indian reserve, RGM regional municipality",
+    "",
+    "<1,000 · 1,000–4,999 · 5,000–9,999 · 10,000–29,999 · 30,000–99,999 · 100,000–499,999 · 500,000+",
+    "persons/km²: <1 · 1–9 · 10–49 · 50–199 · 200–999 · 1,000+",
+    "km²: <10 · 10–99 · 100–499 · 500–1,999 · 2,000–9,999 · 10,000+",
+    "0–4% · 5–9% · 10–24% · 25–49% · 50%+",
+    "0–4% · 5–9% · 10–24% · 25–49% · 50%+",
+    "TRUE / FALSE",
+    "<90% · 90–99% · 100–109% · 110%+"
+  )
+)
+census_dict <- census_dict[census_dict$variable %in% names(raw), , drop = FALSE]
+census_vars <- census_dict$variable
+
+# The coarsened census columns are ordinary categorical factors now, so fold them
+# into the categorical set: this keeps them out of the numeric classification
+# (ordinal_vars / numeric_like) and makes them show up as factors in dat below.
+categorical_vars <- union(categorical_vars, census_vars)
+
 numeric_all <- names(raw)[vapply(raw, is.numeric, logical(1))]
 ordinal_vars <- setdiff(
   numeric_all,
@@ -210,13 +289,39 @@ numeric_like <- c(continuous_vars, ordinal_vars)
 raw <- raw |>
   mutate(across(all_of(numeric_like), ~ replace(.x, .x == -99, NA)))
 
-# Coerce the categorical set to factors (many are semicolon-coded multi-selects).
+# The banded census columns arrive as flat band labels -- their factor order was
+# lost writing to the CSV / Sheet -- so give them ordered factors with the band
+# order restored. These labels mirror census_bands in data/clean.R (which does
+# the actual cutting); edit both together.
+census_levels <- list(
+  pop_2021 = c(
+    "<1,000", "1,000–4,999", "5,000–9,999", "10,000–29,999",
+    "30,000–99,999", "100,000–499,999", "500,000+"
+  ),
+  pop_density_km2 = c("<1", "1–9", "10–49", "50–199", "200–999", "1,000+"),
+  area_km2 = c("<10", "10–99", "100–499", "500–1,999", "2,000–9,999", "10,000+"),
+  indigenous_pct = c("0–4%", "5–9%", "10–24%", "25–49%", "50%+"),
+  visible_minority_pct = c("0–4%", "5–9%", "10–24%", "25–49%", "50%+"),
+  universe_coverage_pct = c("<90%", "90–99%", "100–109%", "110%+")
+)
+
+# Coerce the categorical set to factors (many are semicolon-coded multi-selects);
+# the banded census columns become ordered factors in band order.
 dat <- raw
 for (v in categorical_vars) {
-  dat[[v]] <- as.factor(dat[[v]])
+  if (v %in% names(census_levels)) {
+    dat[[v]] <- factor(dat[[v]], levels = census_levels[[v]], ordered = TRUE)
+  } else {
+    dat[[v]] <- as.factor(dat[[v]])
+  }
 }
 
 all_pickable <- sort(c(continuous_vars, ordinal_vars, categorical_vars))
+
+# Section 1 (univariate distribution) hides the census context columns: a
+# histogram of a municipality attribute across respondents double-counts CSDs
+# and isn't a survey distribution. Other sections keep the full list.
+uni_pickable <- setdiff(all_pickable, census_vars)
 
 var_type <- function(v) {
   if (v %in% continuous_vars) {
@@ -653,7 +758,7 @@ main_ui <- div(
         selectInput(
           "uni_var",
           "Variable",
-          choices = choice_labels(all_pickable),
+          choices = choice_labels(uni_pickable),
           selected = continuous_vars[1]
         ),
         sliderInput(
@@ -1196,10 +1301,13 @@ server <- function(input, output, session) {
   # --- 4. Dictionary --------------------------------------------------------
   output$dict <- DT::renderDT(
     {
-      tibble(
-        variable = all_pickable,
+      # Survey items get their wording/value-labels from labels.csv; the census
+      # context columns are documented from census_dict and appended below.
+      survey_vars <- setdiff(all_pickable, census_vars)
+      survey_dict <- tibble(
+        variable = survey_vars,
         type = vapply(
-          all_pickable,
+          survey_vars,
           function(v) {
             if (v %in% multiselect_vars) {
               "categorical (multi-select)"
@@ -1209,9 +1317,10 @@ server <- function(input, output, session) {
           },
           character(1)
         ),
-        question = vapply(all_pickable, label_of, character(1)),
-        `value labels` = vapply(all_pickable, value_label_string, character(1))
+        question = vapply(survey_vars, label_of, character(1)),
+        `value labels` = vapply(survey_vars, value_label_string, character(1))
       )
+      bind_rows(survey_dict, census_dict)
     },
     options = list(pageLength = 15, autoWidth = TRUE),
     rownames = FALSE
